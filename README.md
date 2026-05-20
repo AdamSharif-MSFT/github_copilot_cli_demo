@@ -11,6 +11,7 @@ The page features:
 - ⌨️ Pixel font (Press Start 2P)
 - ✨ JavaScript fade-in animation
 - ▮ Blinking cursor
+- 🌓 Dark/light mode toggle with saved preference
 
 ## Getting Started
 
