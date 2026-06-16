@@ -22,6 +22,8 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
+            position: relative;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         .container {
@@ -37,6 +39,7 @@
                 transparent 1px,
                 transparent 2px
             );
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
 
         h1 {
@@ -49,6 +52,67 @@
             font-size: 0.9rem;
             color: #00cc00;
             letter-spacing: 2px;
+            transition: color 0.2s ease;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border: 2px solid #33ff33;
+            background-color: transparent;
+            color: inherit;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(51, 255, 51, 0.12);
+        }
+
+        .theme-toggle:focus-visible {
+            outline: 2px solid #33ff33;
+            outline-offset: 3px;
+        }
+
+        body.light-mode {
+            background-color: #f6f6f6;
+            color: #146314;
+        }
+
+        body.light-mode .container {
+            border-color: #146314;
+            box-shadow: 0 0 20px #146314, inset 0 0 20px rgba(20, 99, 20, 0.12);
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 255, 255, 0.2) 0px,
+                rgba(255, 255, 255, 0.2) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+        }
+
+        body.light-mode h1 {
+            text-shadow: 0 0 10px #146314, 0 0 20px #146314;
+        }
+
+        body.light-mode p {
+            color: #1f7f1f;
+        }
+
+        body.light-mode .theme-toggle {
+            border-color: #146314;
+        }
+
+        body.light-mode .theme-toggle:hover {
+            background-color: rgba(20, 99, 20, 0.12);
+        }
+
+        body.light-mode .theme-toggle:focus-visible {
+            outline-color: #146314;
         }
 
         .blink {
@@ -61,6 +125,7 @@
     </style>
 </head>
 <body>
+    <button type="button" class="theme-toggle" aria-label="Switch to light mode">LIGHT MODE</button>
     <div class="container">
         <h1>HELLO WORLD</h1>
         <p>Welcome to the retro web <span class="blink">_</span></p>
@@ -68,7 +133,26 @@
 
     <script>
         (function () {
+            const themeStorageKey = 'themePreference';
+            const body = document.body;
             const container = document.querySelector('.container');
+            const themeToggle = document.querySelector('.theme-toggle');
+            const setTheme = (theme) => {
+                const isLight = theme === 'light';
+                body.classList.toggle('light-mode', isLight);
+                themeToggle.textContent = isLight ? 'DARK MODE' : 'LIGHT MODE';
+                themeToggle.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+            };
+
+            const savedTheme = localStorage.getItem(themeStorageKey);
+            setTheme(savedTheme === 'light' ? 'light' : 'dark');
+
+            themeToggle.addEventListener('click', () => {
+                const nextTheme = body.classList.contains('light-mode') ? 'dark' : 'light';
+                setTheme(nextTheme);
+                localStorage.setItem(themeStorageKey, nextTheme);
+            });
+
             let opacity = 0;
             const fadeIn = setInterval(() => {
                 opacity += 0.02;
